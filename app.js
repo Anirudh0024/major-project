@@ -4,15 +4,17 @@ const mongoose=require("mongoose")
 const MONGO_URL= "mongodb://127.0.0.1:27017/wandurlust"
 const Listing=require("./models/listing.js")
 const path=require("path");
-const methhodOverride=require("method-override")
+const methodOverride=require("method-override")
 const ejsMate=require("ejs-mate");
+const wrapAsync=require("./utils/wrapAsync.js")
+const ExpressError=require("./utils/ExpressError.js")
 async function main() {
    await mongoose.connect(MONGO_URL)
 }
 app.set("view engine","ejs"),
 app.set("views",path.join(__dirname,"views"));
 app.use(express.urlencoded({extended:true}));
-app.use(methhodOverride("_method"));
+app.use(methodOverride("_method"));
 app.engine('ejs',ejsMate);
 app.use(express.static(path.join(__dirname,"/public")));
 main().then(()=>{
@@ -55,17 +57,14 @@ app.get("/listings/:id",async(req ,res)=>{
 });
 
 // CREATE ROUTE
- app.post("/listings",async(req,res,next)=>{
+ app.post("/listings",wrapAsync(async(req,res,next)=>{
     // let {tittle,description,image,price,country,location}=req.body;
-    try{
         const newListing= new Listing(req.body.listing);
         await newListing.save()
          res.redirect("/listings")
-    } catch(err){
-        next(err)
-    }
    
  })
+);
 
 
 //  EDIT ROUTE
@@ -91,10 +90,14 @@ app.delete("/listings/:id",async(req,res)=>{
 })
 
 
-
+app.all("*",(req,res,next)=>{
+    console.log("Unmatched route hit:", req.originalUrl);
+    next(new ExpressError(404,"Page Not Found!"))
+});
 
 app.use((err,req,res,next)=>{
-    res.send("somethig went wrong")
+    let{statusCode,message}=err;
+    res.status(statusCode).send(message);
 })
 app.listen(8080,()=>{
     console.log(`server is listening to port at port 8080`)
