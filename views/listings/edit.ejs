@@ -3,41 +3,72 @@
     <div class="row mt-3">
         <div class="col-8 offset-2">
             <h3>Edit your listing</h3>
-    <form action="/listings/<%=listing._id %>?_method=PUT" method="POST">
+    <form action="/listings/<%=listing._id %>?_method=PUT" method="POST" class="needs-validation" novalidate>
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text"  name="listing[tittle]" value="<%= listing.tittle %>" class="form-control">
+            <input type="text"  name="listing[tittle]" value="<%= listing.tittle %>" class="form-control" required>
+            <div class="valid-feedback">Tittle Looks Good</div>
         </div>
         
         <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <textarea  name="listing[description]" class="form-control"> "<%= listing.description %>"</textarea>
+            <textarea  name="listing[description]" class="form-control"  required> "<%= listing.description %>" </textarea>
+            <div class="invalid-feedback">Please enter description</div>
         </div>
         
     <div class="mb-3">
         <label for="image" class="form-label"> Image Link </label>
-        <input class="form-control" type="text" name="listing[image]"value="<%= listing.image.url %>" >
+        <input class="form-control" type="text" name="listing[image]"value="<%= listing.image.url %>"required>
+        <div class="invalid-feedback">Please enter a valid Link</div>
     </div>
       <div class="row">
         <div class="mb-3 col-md-4">
             <label for="price" class="form-label"> Price </label>
-            <input class="form-control" type="number" name="listing[price]"value="<%= listing.price %>">
+            <input class="form-control" type="number" name="listing[price]"value="<%= listing.price %>" required>
+            <div class="invalid-feedback">Please enter a valid price</div>
          </div>
            
             <div class="mb-3 col-md-4">
                 <label for="country" class="form-label"> Country </label>
-                <input class="form-control" type="text" name="listing[country]" value="<%= listing.country %>">
+                <input class="form-control" type="text" name="listing[country]" value="<%= listing.country %>" required>
+                <div class="invalid-feedback">country name should be valid</div>
             </div>
       </div>
      
         <div class="mb-3">
             <label for="location" class="form-label">Location</label>
-            <input class="form-control" type="text" name="listing[location]" value="<%= listing.location %>">
+            <input class="form-control" type="text" name="listing[location]" value="<%= listing.location %>" required>
+            <div class="invalid-feedback">location should be valid</div>
         </div>
     
         <button class="btn btn-dark  edit-btn mt-3">Edit</button>
     </form>
         </div>
     </div>
+    <script>
+        (() => {
+  "use strict";
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  const forms = document.querySelectorAll(".needs-validation");
+
+  // Loop over them and prevent submission
+  Array.from(forms).forEach((form) => {
+    form.addEventListener(
+      "submit",
+      (event) => {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        form.classList.add("was-validated");
+      },
+      false
+    );
+  });
+})();
+
+    </script>
 </body>
     
