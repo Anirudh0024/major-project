@@ -1,6 +1,5 @@
 
-console.log("Server starting lalala"); 
-
+// console.log("Server starting lalala"); 
 
 const express = require("express");
 const app = express();
