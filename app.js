@@ -5,6 +5,7 @@ const app = express();
 const mongoose = require("mongoose");
 const MONGO_URL = "mongodb://127.0.0.1:27017/wandurlust";
 const Listing = require("./models/listing.js");
+const Review = require("./models/review.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
@@ -66,16 +67,15 @@ app.get("/", (req, res) => {
 // res.send("successful testing")
 // })
 
-
- const validateListing=(req,res,next)=>{
-  let{error}=listingSchema.validate(req.body);
-    if( error){
-      let errMsg=error.details.map((el)=> el.message.join(","));
-      throw new  ExpressError(400,errMsg)
-    }else{
-      next();
-    }
- }
+const validateListing = (req, res, next) => {
+  let { error } = listingSchema.validate(req.body);
+  if (error) {
+    let errMsg = error.details.map((el) => el.message.join(","));
+    throw new ExpressError(400, errMsg);
+  } else {
+    next();
+  }
+};
 
 // INDEX ROUTE
 app.get("/listings", async (req, res) => {
@@ -125,9 +125,9 @@ app.get(
 
 // CREATE ROUTE
 app.post(
-  "/listings",validateListing,
+  "/listings",
+  validateListing,
   wrapAsync(async (req, res, next) => {
-    
     // console.log(`POST /listings - req.path: ${req.path}`);
 
     const newListing = new Listing(req.body.listing);
@@ -153,13 +153,14 @@ app.get("/listings/:id/edit", async (req, res) => {
   res.render("listings/edit.ejs", { listing });
 });
 
-
-app.put("/listings/:id",validateListing, wrapAsync( async (req, res) => {
- 
-  let { id } = req.params;
-  await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-  res.redirect(`/listings/${id}`);
-})
+app.put(
+  "/listings/:id",
+  validateListing,
+  wrapAsync(async (req, res) => {
+    let { id } = req.params;
+    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    res.redirect(`/listings/${id}`);
+  })
 );
 
 // DELETE ROUTE
@@ -174,19 +175,18 @@ app.delete("/listings/:id", async (req, res) => {
   res.redirect("/listings");
 });
 
-app.delete(
-  "/listings/:id",
-  wrapAsync(async (req, res) => {
-    let { id } = req.params;
-    let deletedLsting = await Listing.findByIdAndDelete(id);
-    console.log(deletedLsting);
-    res.redirect("/listings");
-  })
-);
-
+// REVIEWS
+app.post("/listings/:id/rewiews", async (req, res) => {
+  let listing = await Listing.findById(req.params.id);
+  let newReview = new Review(req.body.Review);
+  listing.reviews.push(newReview);
+  await newReview.save();
+  await listing.save();
+ res.redirect('/listings/')
+});
 app.all("/", (req, res, next) => {
   // next(new ExpressError(404, "Page Not Found!"));
-  res.render("/404.ejs")
+  res.render("/404.ejs");
 });
 
 app.use((err, req, res, next) => {
