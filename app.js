@@ -114,7 +114,7 @@ app.get("/listings/:id", async (req, res) => {
   // console.log(`GET /listings/:id - req.path: ${req.path}, req.params:`, req.params);
   let { id } = req.params;
   try {
-    const listing = await Listing.findById(id);
+    const listing = await Listing.findById(id).populate("reviews");
     res.render("listings/show.ejs", { listing });
   } catch (err) {
     // console.log("error",err);
@@ -176,6 +176,8 @@ app.delete("/listings/:id", async (req, res) => {
 });
 
 // REVIEWS
+
+// post
 app.post(
   "/listings/:id/reviews",
   validateReview,
@@ -186,6 +188,17 @@ app.post(
     await newReview.save();
     await listing.save();
     res.redirect("/listings/");
+  })
+);
+
+// delete
+app.delete(
+  "/listings/:id/reviews/:reviewId",
+  wrapAsync(async (req, res) => {
+    let { id, reviewId } = req.params;
+   await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/listings/${id}`);
   })
 );
 app.all("/", (req, res, next) => {
