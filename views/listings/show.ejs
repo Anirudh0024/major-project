@@ -38,7 +38,7 @@
   <hr />
   <div class="col-8 offset-3 mb-3">
     <h4>Leave a Review</h4>
-    <form action="/listings/<%= listing.id%>/rewiews" method="POST" novalidate class="needs-validation">
+    <form action="/listings/<%= listing.id%>/reviews" method="POST" novalidate class="needs-validation">
       <div class="mb-3">
         <label class="form-label" for="rating">Rating</label>
         <input
@@ -53,7 +53,7 @@
       <div class="mb-3">
         <label class="form-label" for="comment">Comments</label>
         <textarea
-          name="review[comments]"
+          name="review[comment]"
           id="comment"
           cols="30"
           rows="5"
