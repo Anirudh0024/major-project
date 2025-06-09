@@ -13,13 +13,15 @@
           alt="listing image"
         />
         <div class="card-body">
-          <b> <p class="card-text"></p> </b><br />
-          <%= listing.description %> <br />
-          &#8377; <%= listing.price ? listing.price.toLocaleString('en-IN') :
-          "N/A" %>
-          <br />
-          <%= listing.location %> <br />
-          <%= listing.country %>
+          <p class="card-text">Owned By:<i><%= listing.owner.username%></i></p>
+
+          <p class="card-text"><%= listing.description %></p>
+          <p class="card-text">
+            &#8377; <%= listing.price ? listing.price.toLocaleString('en-IN') :
+            "N/A" %>
+          </p>
+          <p class="card-text"><%= listing.location %></p>
+          <p class="card-text"><%= listing.country %></p>
         </div>
       </div>
     </div>
@@ -27,7 +29,7 @@
   </div>
   <div class="btns">
     <a
-      href="/listings/<%= listing._id %>/edit "
+      href="/listings/<%= listing._id %>/edit"
       class="btn btn-dark col-1 offset-3 edit-btn mb-4"
       >Edit</a
     >
@@ -79,7 +81,11 @@
           <p class="card-text"><%= review.comment %></p>
           <p class="card-text mb-1"><%= review.rating %> Stars</p>
         </div>
-        <form action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST" class="mb-3">
+        <form
+          action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE"
+          method="POST"
+          class="mb-3"
+        >
           <button class="btn btn-sm btn-dark">Delete</button>
         </form>
       </div>
