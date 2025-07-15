@@ -3,7 +3,7 @@ if (process.env.NODE_ENV != "production") {
 }
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose"); 
+const mongoose = require("mongoose");
 const dbURL = process.env.ATLASDB_URL;
 const path = require("path");
 const methodOverride = require("method-override");
@@ -39,7 +39,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 const store = MongoStore.create({
   mongoUrl: dbURL,
   crypto: {
-    secret:process.env.SECRET ,
+    secret: process.env.SECRET,
   },
   touchAfter: 24 * 3600,
 });
@@ -48,7 +48,7 @@ store.on("error", () => {
 });
 const sessionOptions = {
   store,
-  secret:process.env.SECRET,
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -93,16 +93,18 @@ app.use((req, res, next) => {
   }
   next();
 });
-
 app.get("/", (req, res) => {
-  console.log(`GET / - req.path: ${req.path}`);
-  res.render("/404.ejs");
+  res.render("home");
 });
 
-app.all("/", (req, res, next) => {
-  // next(new ExpressError(404, "Page Not Found!"));
-  res.render("/404.ejs");
-});
+// app.get("/", (req, res) => {
+//   console.log(`GET / - req.path: ${req.path}`);
+//   res.render("/404.ejs");
+// });
+
+// app.all("/", (req, resx) => {
+//   res.render("/404");
+// });
 
 app.use((err, req, res, next) => {
   let { statusCode = 500, message = "Something went wrong" } = err;
