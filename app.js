@@ -3,8 +3,7 @@ if (process.env.NODE_ENV != "production") {
 }
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
-const MONGO_URL = "mongodb://127.0.0.1:27017/wandurlust";
+const mongoose = require("mongoose"); 
 const dbURL = process.env.ATLASDB_URL;
 const path = require("path");
 const methodOverride = require("method-override");
@@ -40,16 +39,16 @@ app.use(express.static(path.join(__dirname, "/public")));
 const store = MongoStore.create({
   mongoUrl: dbURL,
   crypto: {
-    secret: "mysupersecretcode",
+    secret:process.env.SECRET ,
   },
   touchAfter: 24 * 3600,
 });
-store.on("error",()=>{
-  console.log("ERROR in mongoose session store",err)
-})
+store.on("error", () => {
+  console.log("ERROR in mongoose session store", err);
+});
 const sessionOptions = {
   store,
-  secret: "mysupersecretcode",
+  secret:process.env.SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -58,8 +57,6 @@ const sessionOptions = {
     httpOnly: true,
   },
 };
-
-
 
 app.use(session(sessionOptions));
 app.use(flash());
