@@ -97,10 +97,10 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
-// app.get("/", (req, res) => {
-//   console.log(`GET / - req.path: ${req.path}`);
-//   res.render("/404.ejs");
-// });
+app.all("/", (req, res) => {
+  console.log(`GET / - req.path: ${req.path}`);
+  res.render("/404.ejs");
+});
 
 // app.all("/", (req, resx) => {
 //   res.render("/404");
