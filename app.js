@@ -97,19 +97,12 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
-app.all("/", (req, res) => {
-  console.log(`GET / - req.path: ${req.path}`);
-  res.render("/404.ejs");
-});
-
-// app.all("/", (req, resx) => {
-//   res.render("/404");
-// });
 
 app.use((err, req, res, next) => {
   let { statusCode = 500, message = "Something went wrong" } = err;
   res.status(statusCode).render("error.ejs", { message });
 });
+
 
 app.listen(8080, () => {
   console.log(`server is listening to port at port 8080`);
