@@ -57,6 +57,19 @@
           );
         });
       })();
+      document.addEventListener('DOMContentLoaded', function () {
+    const filters = document.getElementById('filters');
+    const collapseElement = document.getElementById('navbarNavAltMarkup');
+    const bsCollapse = new bootstrap.Collapse(collapseElement, { toggle: false });
+
+    collapseElement.addEventListener('show.bs.collapse', function () {
+      filters.style.display = 'none';
+    });
+
+    collapseElement.addEventListener('hide.bs.collapse', function () {
+      filters.style.display = 'flex';  // or 'block' based on your design
+    });
+  });
     </script>
   </body>
 </html>
